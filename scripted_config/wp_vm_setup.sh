@@ -10,7 +10,7 @@ vboxmanage () { VBoxManage.exe "$@"; }
 declare vm_name=Wordpress_VM_automated
 declare size_in_mb=10000
 # this one is temporary
-declare iso_file_path="iso/CentOS-7-x86_64-Minimal-1708.iso"
+declare iso_file_path="../isos/CentOS-7-x86_64-Minimal-1708.iso"
 declare memory_mb=1280
 declare network_name=sys_net_prov
 declare group_name=""
