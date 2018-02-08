@@ -32,7 +32,7 @@ echo "Adding NAT Network"
 vboxmanage natnetwork add --netname $network_name --network "$network_address/$cidr_bits" --dhcp off
 
 declare wordpress_vm_ip=192.168.254.10
-
+declare pxe_server_vm=192.168.254.5
 echo "Adding Port Forwarding Rules for $wordpress_vm_ip"
 
 # Add the portforwarding rules
@@ -45,5 +45,8 @@ vboxmanage natnetwork modify --netname $network_name \
 
 vboxmanage natnetwork modify --netname $network_name \
     --port-forward-4 "https:tcp:[]:50443:[$wordpress_vm_ip]:443"
+
+vboxmanage natnetwork modify --netname sys_net_prov \
+    --port-forward-4 "ssh:tcp:[]:50222:[$pxe_server_vm]:22"
 
 echo "NAT Network successfully created"
