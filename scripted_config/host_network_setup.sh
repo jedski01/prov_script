@@ -46,7 +46,7 @@ vboxmanage natnetwork modify --netname $network_name \
 vboxmanage natnetwork modify --netname $network_name \
     --port-forward-4 "https:tcp:[]:50443:[$wordpress_vm_ip]:443"
 
-vboxmanage natnetwork modify --netname sys_net_prov \
-    --port-forward-4 "ssh:tcp:[]:50222:[$pxe_server_vm]:22"
+vboxmanage natnetwork modify --netname $network_name \
+    --port-forward-4 "ssh_pxe:tcp:[]:50222:[$pxe_server_vm]:22"
 
 echo "NAT Network successfully created"
