@@ -1,22 +1,24 @@
 echo "Setting up static ip address"
 
+#do this in installation
 # move it to network-scripts folder
-cp -f wp_config_files/ifcfg-enp0s3 /etc/sysconfig/network-scripts/
+#cp -f wp_config_files/ifcfg-enp0s3 /etc/sysconfig/network-scripts/
 
 # setup resolv.conf
-echo "nameserver 4.2.2.2" >> /etc/resolv.conf
+#echo "nameserver 4.2.2.2" >> /etc/resolv.conf
 
 # add DNS Name wp.snp.acit to hosts
 # restart network
-systemctl restart network
+#systemctl restart network
 
 #setup the shared folder
 
+# do this in installation
 # setup users
-echo "Creating user admin"
-useradd admin
-echo admin:P@ssw0rd | chpasswd
-usermod -aG wheel admin
+# echo "Creating user admin"
+# useradd admin
+# echo admin:P@ssw0rd | chpasswd
+# usermod -aG wheel admin
 
 # create ssh directory
 echo "Creating directory"

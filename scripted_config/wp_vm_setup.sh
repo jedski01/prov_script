@@ -111,8 +111,9 @@ vboxmanage modifyvm $vm_name\
     --audio none\
     --boot1 disk\
     --boot2 dvd\
-    --boot3 none\
+    --boot3 net\
     --boot4 none\
-    --memory "${memory_mb}"
+    --memory "${memory_mb}" \
+    --macaddress1 "020000000001"
 
 echo "VM successfully created"
