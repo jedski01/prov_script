@@ -13,5 +13,8 @@ mysql -u root -pP@ssw0rd < wp_mariadb_config.sql
 #Disable the wp_mariadb_config.service
 sytemctl disable wp_mariadb_config.service
 
+# delete the service and config files
+rm -rf /wp_config_files
+
 #log to journal showing script end
 systemd-cat -p "notice" -t wp_mariadb_config printf "%s" "wp_mariadb_config.sh end" 
