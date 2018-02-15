@@ -110,8 +110,7 @@ vboxmanage modifyvm $vm_name\
     --cableconnected1 on\
     --audio none\
     --boot1 disk\
-    --boot2 dvd\
-    --boot3 net\
+    --boot2 net\
     --boot4 none\
     --memory "${memory_mb}" \
     --macaddress1 "020000000001"
