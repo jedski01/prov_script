@@ -73,15 +73,6 @@ vboxmanage storagectl $vm_name\
     --add sata\
     --bootable on
 
-echo "Attaching iso file to optical drive"
-# attach ISO installation
-vboxmanage storageattach $vm_name\
-    --storagectl $dvd_ctrl\
-    --port 0\
-    --device 0\
-    --type dvddrive\
-    --medium $iso_file_path
-
 # attach Hard disk and specify its ssd
 echo "Attaching hard disk to VM"
 vboxmanage storageattach $vm_name\
@@ -111,7 +102,6 @@ vboxmanage modifyvm $vm_name\
     --audio none\
     --boot1 disk\
     --boot2 net\
-    --boot4 none\
     --memory "${memory_mb}" \
     --macaddress1 "020000000001"
 

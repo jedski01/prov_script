@@ -2,9 +2,16 @@
 
 vboxmanage () { VBoxManage.exe "$@"; }
 
+# attach sys_net_prov network
+vboxmanage modifyvm acit_4640_pxe\
+  --nic1 natnetwork\
+  --nat-network1 sys_net_prov
+  
 # check if acit_4640_pxe is running 
 # if it is not run it
 vboxmanage startvm acit_4640_pxe
+
+
 
 until [[ $(ssh -q pxe exit && echo "online") == "online" ]] ; do
   sleep 10s
