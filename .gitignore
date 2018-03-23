@@ -1,1 +1,6 @@
 /isos
+.vagrant
+packer_cache/
+*.retry
+output-virtualbox-iso/
+*.box

@@ -1,0 +1,142 @@
+---
+- hosts: wordpress
+  become: true 
+  tasks:
+    - name: add EPEL Repository
+      yum: 
+        name: epel-release
+        state: present
+      
+    - name: installing rsync
+      package:
+        name: rsync
+        state: present
+
+    - name: Set up the https 
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+
+    - name: Set up the http
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+
+    - name: Set up the ssh 
+      firewalld:
+        service: ssh
+        permanent: true
+        state: enabled
+    
+    - name: install nginx
+      package:
+        name: nginx
+        state: present
+    
+    - name: copy nginx configuration file
+      copy: 
+        src: ./wp_setup_files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+    
+    - name: start and enable nginx
+      service: 
+        name: nginx
+        state: restarted
+        enabled: yes
+
+    - name: install php
+      package:
+        name: "{{ item }}"
+      with_items:
+        - php
+        - php-fpm
+        - php-mysql
+
+    - name: copy php configuration file (1)
+      copy:
+        src: ./wp_setup_files/php.ini
+        dest: /etc/php.ini
+    
+    - name: copy php configuration file (2)
+      copy:
+        src: ./wp_setup_files/www.conf
+        dest: /etc/php-fpm.d/www.conf
+
+    - name: starting and enabling php-fpm
+      service:
+        name: php-fpm
+        state: restarted
+        enabled: yes
+
+    - name: install mariadb
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - mariadb-server
+        - mariadb
+
+    - name: starting and enabling MariaDB
+      service: 
+        name: mariadb
+        state: restarted
+        enabled: yes
+
+    - name: transferring mariadb config files
+      copy:
+        src:  ./wp_setup_files/mariadb_config
+        dest: /
+
+    - name: setting initial mariadb configuration
+      script: ./wp_setup_files/wp_mariadb.sh
+
+    - name: restarting MariaDB
+      service:
+        name: mariadb
+        state: restarted
+
+    - name: removing temp config files
+      file:
+        path: /mariadb_config
+        state: absent
+
+    - name: downloading and unpacking wordpress archive
+      unarchive:
+        src: http://wordpress.org/latest.tar.gz
+        dest: /
+        remote_src: yes
+
+    - name: setting wordpress config
+      copy:
+        src: ./wp_setup_files/wp-config.php
+        dest: /wordpress/wp-config.php
+
+    - name: transferring wordpress to nginx folder
+      command: rsync -avP /wordpress/ /usr/share/nginx/html
+
+    - name: cleaning up temporary wordpress folder
+      file:
+        path: /wordpress
+        state: absent
+
+    - name: changing ownership for wordpress source
+      file:
+        path: /usr/share/nginx/html
+        state: directory
+        owner: admin
+        group: nginx
+        recurse: yes
+
+    - name: creating uploads folder
+      file:
+        path: /usr/share/nginx/html/wp-content/uploads
+        state: directory
+        owner: admin
+        recurse: yes
+        group: nginx
+        mode: g+w
+
+    
+... 

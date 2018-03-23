@@ -1,0 +1,20 @@
+host wp
+	Hostname localhost
+	Port 50022
+	ForwardAgent yes
+	IdentityFile ~/.ssh/acit_admin_id_rsa
+	User admin
+	StrictHostKeyChecking no
+	UserKnownHostsFile=/dev/null
+host pxe
+	Hostname localhost
+	port 50222
+	ForwardAgent yes
+	IdentityFile ~/.ssh/acit_admin_id_rsa
+	User admin
+	StrictHostKeyChecking no
+	UserKnownHostsFile=/dev/null
+
+host github.com
+	User git
+	IdentityFile ~/.ssh/jiquin1_git_id_rsa
