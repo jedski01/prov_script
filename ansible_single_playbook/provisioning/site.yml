@@ -126,7 +126,5 @@
         owner: admin
         recurse: yes
         group: nginx
-        mode: g+w
-
-    
+        mode: g+w    
 ... 
