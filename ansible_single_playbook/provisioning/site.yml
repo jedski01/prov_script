@@ -12,24 +12,16 @@
         name: rsync
         state: present
 
-    - name: Set up firewall rule https 
+    - name: Set up firewall rules
       firewalld:
-        service: https
+        service: "{{ item }}"
         permanent: true
         state: enabled
+      with_items:
+        - ssh
+        - http
+        - https
 
-    - name: Set up firewall rule http
-      firewalld:
-        service: http
-        permanent: true
-        state: enabled
-
-    - name: Set up firewall rule for ssh 
-      firewalld:
-        service: ssh
-        permanent: true
-        state: enabled
-    
     - name: Install nginx
       package:
         name: nginx
