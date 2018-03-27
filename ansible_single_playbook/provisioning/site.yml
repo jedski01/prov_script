@@ -22,6 +22,11 @@
         - http
         - https
 
+    - name: restart firewalld
+      service:
+        name: firewalld
+        state: restarted
+    
     - name: Install nginx
       package:
         name: nginx
