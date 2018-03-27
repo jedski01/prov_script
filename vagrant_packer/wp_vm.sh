@@ -1,3 +1,13 @@
+##############################################
+# FIREWALLD SETUP
+##############################################
+echo "Setting up Firewall"
+firewall-cmd --zone=public --add-port=22/tcp --permanent
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+echo "Restarting the firewall"
+systemctl restart firewalld
+
 #############################################
 # INSTALL RSYNC and WGET
 #############################################
