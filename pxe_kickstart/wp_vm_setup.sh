@@ -16,6 +16,24 @@ declare network_name=sys_net_prov
 declare group_name=""
 # and so is this one
 
+
+# attach sys_net_prov network
+vboxmanage modifyvm acit_4640_pxe\
+  --nic1 natnetwork\
+  --nat-network1 sys_net_prov
+  
+# check if acit_4640_pxe is running 
+# if it is not run it
+vboxmanage startvm acit_4640_pxe
+
+until [[ $(ssh -q pxe exit && echo "online") == "online" ]] ; do
+  sleep 10s
+  echo "waiting for pxe server vm to come online"
+done
+
+# transfer configuration files to pxe server
+./web_service_env_vm.sh
+
 #check if the vm exists
 #remove it if it exists
 for vm in `vboxmanage list vms | awk '{print $1}' | tr -d '\015' | tr -d '\"'`

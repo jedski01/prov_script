@@ -1,23 +1,5 @@
 #!/bin/bash
 
-vboxmanage () { VBoxManage.exe "$@"; }
-
-# attach sys_net_prov network
-vboxmanage modifyvm acit_4640_pxe\
-  --nic1 natnetwork\
-  --nat-network1 sys_net_prov
-  
-# check if acit_4640_pxe is running 
-# if it is not run it
-vboxmanage startvm acit_4640_pxe
-
-
-
-until [[ $(ssh -q pxe exit && echo "online") == "online" ]] ; do
-  sleep 10s
-  echo "waiting for pxe server vm to come online"
-done
-
 ssh pxe 'sudo chown nginx:wheel /usr/share/nginx/html'
 ssh pxe 'sudo chmod ug+w /usr/share/nginx/html'
 
@@ -28,5 +10,3 @@ scp wp_mariadb_config.service wp_mariadb_config.sh pxe:/usr/share/nginx/html/wp_
 ssh pxe 'sudo chmod ugo+r /usr/share/nginx/html/wp_ks.cfg'
 ssh pxe 'sudo chmod ugo+rx /usr/share/nginx/html/wp_config_files'
 ssh pxe 'sudo chmod -R ugo+r /usr/share/nginx/html/wp_config_files/*'
-
-./wp_vm_setup.sh
