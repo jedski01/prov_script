@@ -5,12 +5,12 @@
     - name: Install EPEL Repository
       yum: 
         name: epel-release
-        state: present
+        state: latest
       
     - name: Install rsync
       package:
         name: rsync
-        state: present
+        state: latest
 
     - name: Set up firewall rules
       firewalld:
@@ -30,7 +30,7 @@
     - name: Install nginx
       package:
         name: nginx
-        state: present
+        state: latest
     
     - name: Copy nginx configuration file
       copy: 
@@ -68,7 +68,7 @@
     - name: Install mariadb
       package:
         name: "{{ item }}"
-        state: present
+        state: latest
       with_items:
         - mariadb-server
         - mariadb
