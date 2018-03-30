@@ -1,0 +1,38 @@
+---
+# tasks file for nginx
+- name: install nginx package
+  package:
+    name: nginx
+    state: latest
+  become: true
+
+- name: copy nginx configuration files
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  become: true
+
+- name: start and enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: true
+
+- name: Set up firewall rules
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - http
+    - https
+  become: true
+
+- name: restart firewalld
+  service:
+    name: firewalld
+    state: restarted
+  become: true
+
+...

@@ -1,0 +1,67 @@
+---
+# tasks file for wordpress
+- name: install rsync
+  package: 
+    name: rsync
+    state: present
+  become: true
+
+- name: Download and unpack wordpress archive
+  unarchive:
+    src: http://wordpress.org/latest.tar.gz
+    dest: /
+    remote_src: yes
+  become: true
+
+- name: copy wordpress configuration file
+  copy:
+    src: wp-config.php
+    dest: /wordpress
+  become: true
+
+- name: rsync wordpress to destination
+  command: rsync -avP /wordpress/ /usr/share/nginx/html
+  become: true
+  
+- name: clean up temporary wordpress folder
+  file:
+    path: /wordpress
+    state: absent
+  become: true
+
+- name: Change ownership of wordpress source
+  file:
+    path: /usr/share/nginx/html
+    state: directory
+    owner: admin
+    group: nginx
+    recurse: yes
+  become: true
+
+- name: Create and setup ownership of uploads folder
+  file:
+    path: /usr/share/nginx/html/wp-content/uploads
+    state: directory
+    owner: admin
+    recurse: yes
+    group: nginx
+    mode: g+w 
+  become: true
+
+- name: create the wordpress database
+  mysql_db:
+    name: wordpress
+    state: present
+    login_user: "{{ mariadb_priv_user }}"
+    login_password: "{{ mariadb_priv_user_passwd }}"
+
+- name: create the wordpress user
+  mysql_user:
+    name: "{{ wordpress_db_user }}"
+    password: "{{ wordpress_db_user_passwd }}"
+    host: localhost
+    state: present
+    login_user: "{{ mariadb_priv_user }}"
+    login_password: "{{ mariadb_priv_user_passwd }}"
+    priv: "wordpress.*:ALL"
+...

@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# before running this execute export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+# or add it to .bashrc file
+Vagrant.configure("2") do |config|
+
+  #General configuration
+  config.ssh.username = "admin"
+  config.ssh.private_key_path = "acit_admin_id_rsa"
+  
+  #Specifiy the base box here
+  config.vm.box = "centos_base"
+
+  #VM specific configuration
+  #see : https://www.vagrantup.com/docs/multi-machine/
+  config.vm.define "wp" do |wp_machine|
+    wp_machine.vm.hostname = "wordpress"
+    wp_machine.vm.network "forwarded_port", guest: 443, host: 50443
+    wp_machine.vm.network "forwarded_port", guest: 22, host: 50022
+    wp_machine.vm.network "forwarded_port", guest: 80, host: 50080
+    #other machine configuration items go here
+    wp_machine.vm.provider "virtualbox" do |vb|
+      vb.linked_clone = true
+      vb.name = "wordpress vm"
+      vb.memory = "1280"
+      vb.gui = false
+    end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provisioning/site.yml"
+    ansible.inventory_path = "provisioning/hosts"
+  end
+end

@@ -1,0 +1,28 @@
+---
+# tasks file for php
+- name: install php packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  become: true
+  with_items:
+   - php
+   - php-fpm
+   - php-mysql
+
+- name: copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest}}"
+  become: true
+  with_items:
+    - { src: "php.ini", dest: "/etc/php.ini"}
+    - { src: "www.conf", dest: "/etc/php-fpm.d/www.conf"}
+
+- name: start and enable php-fpm
+  service:
+    name: php-fpm
+    state: restarted
+    enabled: yes
+  become: true
+...
