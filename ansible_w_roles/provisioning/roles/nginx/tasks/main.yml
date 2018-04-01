@@ -24,15 +24,9 @@
     service: "{{ item }}"
     permanent: true
     state: enabled
+    immediate: yes
   with_items:
     - http
     - https
   become: true
-
-- name: restart firewalld
-  service:
-    name: firewalld
-    state: restarted
-  become: true
-
 ...
